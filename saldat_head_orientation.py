@@ -178,13 +178,13 @@ class HeadOrientation:
         #labels_true += [0 for xy in geoxy_false_set]
         std = StandardScaler()
         X = std.fit_transform(X)
-        db = DBSCAN(eps=0.3, min_samples=5)
+        db = DBSCAN(eps=0.3, min_samples=3)
         db.fit_predict(X)
         temp = std.inverse_transform(X[db.core_sample_indices_])
 
         return set([(int(item[0]), int(item[1])) for item in temp]), db.core_sample_indices_
 
-    def create_fixation_map(self, fixation_list):
+    def create_fixation_map(self, fixation_list, dataset):
         result = np.zeros(shape=(head_orientation_lib.H, head_orientation_lib.W), dtype=np.int)
         pixel_list = self.create_fixation_pixellist(fixation_list)
         for x, y in pixel_list:
@@ -192,4 +192,7 @@ class HeadOrientation:
             
         result1 = np.fliplr(result)
         result1 = np.flipud(result1)
+        
+        if dataset == self._DATASET1:
+            result1 = np.fliplr(result1)
         return result1
