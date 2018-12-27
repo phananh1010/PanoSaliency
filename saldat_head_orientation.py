@@ -2,6 +2,12 @@ import os
 import numpy as np
 from pyquaternion import Quaternion
 
+from sklearn import model_selection
+from sklearn import metrics
+from sklearn.cluster import DBSCAN
+from sklearn.datasets.samples_generator import make_blobs
+from sklearn.preprocessing import StandardScaler
+
 import head_orientation_lib
 reload(head_orientation_lib)
 
@@ -11,8 +17,8 @@ class HeadOrientation:
     
     _dirpath_dat1 = ''#u'/home/u9168/salnet/Datasets/Dataset1/results/'
     _dirpath_dat2 = ''#u'/home/u9168/salnet/Datasets/Dataset2/Formated_Data/Experiment_1/'
-    _file_ext1 = ''#.txt
-    _file_ext2 = ''#.csv
+    _file_ext1 = '.txt'
+    _file_ext2 = '.csv'
     _dataset_info_dict = {_DATASET1:[], _DATASET2:[]}
     
 
@@ -20,6 +26,8 @@ class HeadOrientation:
     def __init__(self, dir_path1, dir_path2, file_ext1, file_ext2):
         self._dirpath_dat1 = dir_path1
         self._dirpath_dat2 = dir_path2
+        self._file_ext1 = file_ext1
+        self._file_ext2 = file_ext2
         self._dataset_info_dict = {1:[self._dirpath_dat1, self._file_ext1, self.parse_dat1, head_orientation_lib.extract_direction_dataset1], \
                                 2:[self._dirpath_dat2, self._file_ext2, self.parse_dat2, head_orientation_lib.extract_direction_dataset2]}
         
@@ -135,4 +143,53 @@ class HeadOrientation:
         for series in series_dt:
             for item in series:
                 result.append(item)
-        return result
+                
+        #now filter the fixation before returning
+        pixel_set0, fix_list0 = self.create_fixation_pixelset(result)
+        pixel_set, idx_list = self.filter_fixation(fix_list0)
+        return [fix_list0[idx] for idx in idx_list]
+    
+    def create_fixation_pixellist(self, fixation_list):
+        #return list of (hi, wi) coord
+        pixel_list = []
+        for time, v, _, _ in fixation_list:
+            theta, phi = head_orientation_lib.vector_to_ang(v)
+            x, y = head_orientation_lib.ang_to_geoxy(theta, phi, head_orientation_lib.H, head_orientation_lib.W)
+            pixel_list.append((x, y))
+        return pixel_list
+
+    def create_fixation_pixelset(self, fixation_list):
+        #return set of (hi, wi) coord, eliminate redundancy
+        pixel_set = set()
+        orifix_list = []
+        for time, v, _, _ in fixation_list:
+            theta, phi = head_orientation_lib.vector_to_ang(v)
+            x, y = head_orientation_lib.ang_to_geoxy(theta, phi, head_orientation_lib.H, head_orientation_lib.W)
+            if (x, y) not in pixel_set:
+                pixel_set.add((x, y))
+                orifix_list.append([time, v, 0, 0])
+        return pixel_set, orifix_list    
+    
+    def filter_fixation(self, _fix_list):
+        result = set()
+        _geoxy_set = self.create_fixation_pixellist(_fix_list)
+
+        X = [[xy[0], xy[1]] for xy in _geoxy_set]
+        #labels_true += [0 for xy in geoxy_false_set]
+        std = StandardScaler()
+        X = std.fit_transform(X)
+        db = DBSCAN(eps=0.3, min_samples=5)
+        db.fit_predict(X)
+        temp = std.inverse_transform(X[db.core_sample_indices_])
+
+        return set([(int(item[0]), int(item[1])) for item in temp]), db.core_sample_indices_
+
+    def create_fixation_map(self, fixation_list):
+        result = np.zeros(shape=(head_orientation_lib.H, head_orientation_lib.W), dtype=np.int)
+        pixel_list = self.create_fixation_pixellist(fixation_list)
+        for x, y in pixel_list:
+            result[x, y] = 1
+            
+        result1 = np.fliplr(result)
+        result1 = np.flipud(result1)
+        return result1
