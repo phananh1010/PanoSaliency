@@ -1,5 +1,6 @@
 import os
 import numpy as np
+from Quaternion import Quat
 from pyquaternion import Quaternion
 
 from sklearn import model_selection
@@ -14,22 +15,30 @@ reload(head_orientation_lib)
 class HeadOrientation:
     _DATASET1 = 1
     _DATASET2 = 2
+    _DATASET3 = 3
     
     _dirpath_dat1 = ''#u'/home/u9168/salnet/Datasets/Dataset1/results/'
     _dirpath_dat2 = ''#u'/home/u9168/salnet/Datasets/Dataset2/Formated_Data/Experiment_1/'
+    _dirpath_dat3 = ''#u'/home/u9168/saliency_dataset/data/head-orientation/dataset3/sensory/orientation'
     _file_ext1 = '.txt'
     _file_ext2 = '.csv'
-    _dataset_info_dict = {_DATASET1:[], _DATASET2:[]}
+    _file_ext3 = '.csv'
+    _dataset_info_dict = {_DATASET1:[], _DATASET2:[], _DATASET3:[]}
     
-
+    _topic_dict = {_DATASET1:['venise', 'diving', 'roller', 'paris', 'timelapse'], \
+              _DATASET2:['1', '0', '3', '2', '5', '4', '7', '6', '8'],\
+              _DATASET3:['coaster_', 'coaster2_', 'diving', 'drive', 'game', 'landscape', 'pacman', 'panel', 'ride', 'sport']}
     
-    def __init__(self, dir_path1, dir_path2, file_ext1, file_ext2):
+    def __init__(self, dir_path1, dir_path2, dir_path3, file_ext1, file_ext2, file_ext3):
         self._dirpath_dat1 = dir_path1
         self._dirpath_dat2 = dir_path2
+        self._dirpath_dat3 = dir_path3
         self._file_ext1 = file_ext1
         self._file_ext2 = file_ext2
-        self._dataset_info_dict = {1:[self._dirpath_dat1, self._file_ext1, self.parse_dat1, head_orientation_lib.extract_direction_dataset1], \
-                                2:[self._dirpath_dat2, self._file_ext2, self.parse_dat2, head_orientation_lib.extract_direction_dataset2]}
+        self._file_ext3 = file_ext3
+        self._dataset_info_dict = {self._DATASET1:[self._dirpath_dat1, self._file_ext1, self.parse_dat1, head_orientation_lib.extract_direction_dataset1], \
+                                self._DATASET2:[self._dirpath_dat2, self._file_ext2, self.parse_dat2, head_orientation_lib.extract_direction_dataset2], \
+                               self._DATASET3:[self._dirpath_dat3, self._file_ext3, self.parse_dat3, head_orientation_lib.extract_direction_dataset3]}
         
     def parse_dat1(self, _file_name):#for X.Corbillon dataset
         temp = open(_file_name).read().split('\n')[:-1]
@@ -48,11 +57,26 @@ class HeadOrientation:
             temp2[i] = [item[0], -1, item[3], item[2], item[1], item[4]]
         return np.array(temp2)
     
+    def parse_dat3(self, _file_name):#for Wen Lo dataset
+        temp = open(_file_name).read().split('\n')[1:-1]#remove header and useless last line
+        temp2 = [map(float, item.split(',')) for item in temp]
+
+        for i, _ in enumerate(temp2):
+            fid, _, _, _, _, _, _, theta, phi, psi = temp2[i]
+            tstamp = fid * 1.0/30
+            t = Quat([psi, theta, phi]).q #nolonger use Quat
+            q = Quaternion([t[3], t[2], -t[1], t[0]])
+            
+            w, x, y, z = q.elements#{} + {}i + {}j + {}k, a=w, b=x, c=y, d=z
+            temp2[i] = [tstamp, fid, z, y, x, w]
+
+        return np.array(temp2)
+    
     def load_filename_list(self, dataset, topic):
         #load all headpos log of all users for a given dataset & video_topic
         filename_list = []
-        if dataset != self._DATASET1 and dataset != self._DATASET2:
-            print 'ERROR, dataset number must be either 1 or 2'
+        if dataset != self._DATASET1 and dataset != self._DATASET2 and dataset != self._DATASET3:
+            print 'ERROR, dataset number must be either 1 or 2 or 3'
             raise Exception
         
         dirpath, file_ext, f_parse, f_extract_orientation = self._dataset_info_dict[dataset]
@@ -129,7 +153,7 @@ class HeadOrientation:
             result.append([vector[idx] for idx,_ in enumerate(vector) if idx not in remove_idx])
         return result
     
-    def get_fixation(self, vector_ds, time, _bp=3, _ap=1):
+    def get_fixation(self, vector_ds, time, _bp=3, _ap=1, filter_fix=True):
         dt = 1.0/30
         series_dt = []
         for vector in vector_ds:
@@ -146,8 +170,11 @@ class HeadOrientation:
                 
         #now filter the fixation before returning
         pixel_set0, fix_list0 = self.create_fixation_pixelset(result)
-        pixel_set, idx_list = self.filter_fixation(fix_list0)
-        return [fix_list0[idx] for idx in idx_list]
+        if filter_fix == True:
+            pixel_set, idx_list = self.filter_fixation(fix_list0)
+            return [fix_list0[idx] for idx in idx_list]
+        else:
+            return fix_list0
     
     def create_fixation_pixellist(self, fixation_list):
         #return list of (hi, wi) coord
