@@ -3,9 +3,32 @@ from pyquaternion import Quaternion
 
 H = 90
 W = 160
-topic_info_dict = {'paris': ['paris.mp4', 244.06047, 3840, 2048], 'timelapse': ['newyork.webm', 91.03333, 3840, 2048], '3': ['conan2.mp4', 172.5724, 2560, 1440], '1': ['skiing.mp4', 201.13426, 2560, 1440], '0': ['conan1.mp4', 164.1973, 2560, 1440], 'venise': ['venise.webm', 175.04, 3840, 2160], '2': ['alien.mp4', 293.2333, 2560, 1440], '5': ['war.mp4', 655.0544, 2160, 1080], '4': ['surfing.mp4', 205.7055, 2560, 1440], '7': ['football.mp4', 164.8, 2560, 1440], '6': ['cooking.mp4', 451.12, 2560, 1440], 'diving': ['ocean40.webm', 372.23853, 3840, 2048], 'roller': ['roller65.webm', 69.0, 3840, 2048], '8': ['rhinos.mp4', 292.0584, 2560, 1440]}
+topic_info_dict = {'paris': ['paris.mp4', 244.06047, 3840, 2048], \
+                   'timelapse': ['newyork.webm', 91.03333, 3840, 2048], \
+                   '3': ['conan2.mp4', 172.5724, 2560, 1440], \
+                   '1': ['skiing.mp4', 201.13426, 2560, 1440], \
+                   '0': ['conan1.mp4', 164.1973, 2560, 1440], \
+                   'venise': ['venise.webm', 175.04, 3840, 2160],\
+                   '2': ['alien.mp4', 293.2333, 2560, 1440], \
+                   '5': ['war.mp4', 655.0544, 2160, 1080], \
+                   '4': ['surfing.mp4', 205.7055, 2560, 1440], \
+                   '7': ['football.mp4', 164.8, 2560, 1440], \
+                   '6': ['cooking.mp4', 451.12, 2560, 1440], \
+                   'diving': ['ocean40.webm', 372.23853, 3840, 2048], \
+                   'roller': ['roller65.webm', 69.0, 3840, 2048], \
+                   '8': ['rhinos.mp4', 292.0584, 2560, 1440],\
+                   'coaster2_': ['', 60.0, -1, -1], \
+                   'coaster_': ['', 60.0, -1, -1], \
+                   'diving': ['', 60.0, -1, -1], \
+                   'drive': ['', 60.0, -1, -1], \
+                   'game': ['', 60.0, -1, -1], \
+                   'landscape': ['', 60.0, -1, -1], \
+                   'pacman': ['', 60.0, -1, -1],\
+                   'panel': ['', 60.0, -1, -1], \
+                   'ride': ['', 60.0, -1, -1], \
+                   'sport': ['', 60.0, -1, -1] }
 
-
+#['coaster2_', 'coaster', 'diving', 'drive', 'game', 'landscape', 'pacman', 'panel', 'ride', 'sport']
 
 def extract_direction_dataset1(q):
         #q is quaternion
@@ -14,6 +37,12 @@ def extract_direction_dataset1(q):
         return q.rotate(v0)
     
 def extract_direction_dataset2(q):
+        #q is quaternion
+        v0 = [0, 0, 1]
+        q = Quaternion([q[3], -q[2], q[1], -q[0]])
+        return q.rotate(v0)
+    
+def extract_direction_dataset3(q):
         #q is quaternion
         v0 = [0, 0, 1]
         q = Quaternion([q[3], -q[2], q[1], -q[0]])

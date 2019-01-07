@@ -217,9 +217,27 @@ class HeadOrientation:
         for x, y in pixel_list:
             result[x, y] = 1
             
-        result1 = np.fliplr(result)
-        result1 = np.flipud(result1)
+
         
-        if dataset == self._DATASET1:
+        if dataset == self._DATASET2:
+            result1 = np.fliplr(result)
+            result1 = np.flipud(result1)
+        elif dataset == self._DATASET1:
+            result1 = np.fliplr(result)
+            result1 = np.flipud(result1)
             result1 = np.fliplr(result1)
+        elif dataset == self._DATASET3:
+            pos = head_orientation_lib.W/4
+            npos = head_orientation_lib.W/4*3
+            
+            result1 = np.fliplr(result)
+            temp = np.copy(result1[:, pos:])
+            result1[:, npos:] = result1[:, :pos]
+            result1[:, :npos] = temp
+            result1 = np.flipud(result1)
+
+        else:
+            print 'INVALID dataset'
+            raise
+            
         return result1

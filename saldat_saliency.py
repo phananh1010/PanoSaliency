@@ -9,6 +9,7 @@ import timeit
 class Fixation:
     _DATASET1 = 1
     _DATASET2 = 2
+    _DATASET3 = 3
     
     _gaussian_dict = {}
     _vec_map = None
@@ -51,31 +52,32 @@ class Fixation:
 
                     heat_map[i, j] += 1.0 * self.gaussian_from_distance(d)
                     gau_time = timeit.default_timer() - btime - dd_time
-
-#                idx += 1;
-#                if verbal == False: continue
-#                if idx % 10000 == 0:
-#                      print self._W * self._H, idx, i, j, heat_map[i, j], d, dd_time, gau_time
-#                if d < 5: 
-#                      print '<5 degree: ---->', head_orientation_lib.W * head_orientation_lib.H, idx, i, j, heat_map[i, j], d, dd_time, gau_time
                   
-        heat_map1 = np.fliplr(heat_map)
-        heat_map1 = np.flipud(heat_map1)
-        pos = head_orientation_lib.W/2
-        temp = np.copy(heat_map1[:, pos:])
-        heat_map1[:, pos:] = heat_map1[:, :pos]
-        heat_map1[:, :pos] = temp
-        
-        if dataset == self._DATASET1:
-            heat_map1 = np.fliplr(heat_map1)
+        if dataset == self._DATASET2:
+            heat_map1 = np.fliplr(heat_map)
             heat_map1 = np.flipud(heat_map1)
-            
+            pos = head_orientation_lib.W/2
+            temp = np.copy(heat_map1[:, pos:])
+            heat_map1[:, pos:] = heat_map1[:, :pos]
+            heat_map1[:, :pos] = temp
+        
+        elif dataset == self._DATASET1:
+            ##heat_map1 = np.fliplr(heat_map1)
+            heat_map1 = np.flipud(heat_map)
+            pos = head_orientation_lib.W/2
+            temp = np.copy(heat_map1[:, pos:])
+            heat_map1[:, pos:] = heat_map1[:, :pos]
+            heat_map1[:, :pos] = temp
+                       
         elif dataset == self._DATASET3:
+            heat_map1 = np.fliplr(heat_map)
+            heat_map1 = np.flipud(heat_map1)
             pos = head_orientation_lib.W/4
             npos = head_orientation_lib.W/4*3
-            temp = np.copy(heat_map1[:, pos:])
-            heat_map1[:, npos:] = heat_map1[:, :pos]
-            heat_map1[:, :npos] = temp
+            temp = np.copy(heat_map1[:, :npos])
+            heat_map1[:, :pos] = heat_map1[:, npos:]
+            heat_map1[:, pos:] = temp
+            
         
         return heat_map1
 
