@@ -95,6 +95,6 @@ def ang_to_geoxy(_theta, _phi, _h, _w):
     if temp < 0: temp = 180 + temp + 180
     temp = 360 - temp
     y = (temp * 1.0/360 * _w)
-    return int(x), int(y)
+    return x, y
 
 

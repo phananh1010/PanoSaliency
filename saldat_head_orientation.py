@@ -192,12 +192,12 @@ class HeadOrientation:
         for time, v, _, _ in fixation_list:
             theta, phi = head_orientation_lib.vector_to_ang(v)
             x, y = head_orientation_lib.ang_to_geoxy(theta, phi, head_orientation_lib.H, head_orientation_lib.W)
-            if (x, y) not in pixel_set:
-                pixel_set.add((x, y))
+            if (int(x), int(y)) not in pixel_set:
+                pixel_set.add((int(x), int(y)))
                 orifix_list.append([time, v, 0, 0])
         return pixel_set, orifix_list    
     
-    def filter_fixation(self, _fix_list):
+    def filter_fixation(self, _fix_list, eps=0.3, min_samples=3):
         result = set()
         _geoxy_set = self.create_fixation_pixellist(_fix_list)
 
@@ -205,7 +205,8 @@ class HeadOrientation:
         #labels_true += [0 for xy in geoxy_false_set]
         std = StandardScaler()
         X = std.fit_transform(X)
-        db = DBSCAN(eps=0.3, min_samples=3)
+
+        db = DBSCAN(eps=eps, min_samples=min_samples)
         db.fit_predict(X)
         temp = std.inverse_transform(X[db.core_sample_indices_])
 
@@ -215,10 +216,8 @@ class HeadOrientation:
         result = np.zeros(shape=(head_orientation_lib.H, head_orientation_lib.W), dtype=np.int)
         pixel_list = self.create_fixation_pixellist(fixation_list)
         for x, y in pixel_list:
-            result[x, y] = 1
-            
+            result[int(x), int(y)] = 1
 
-        
         if dataset == self._DATASET2:
             result1 = np.fliplr(result)
             result1 = np.flipud(result1)
@@ -241,3 +240,12 @@ class HeadOrientation:
             raise
             
         return result1
+    
+    @staticmethod
+    def pixellist_from_fixation_list(fixation_list):
+        pixel_list = []
+        for _, v, _ ,_ in fixation_list:
+            theta, phi = head_orientation_lib.vector_to_ang(v)
+            wi, hi = head_orientation_lib.ang_to_geoxy(theta, phi, head_orientation_lib.H, head_orientation_lib.W)
+            pixel_list.append([hi, wi])
+        return pixel_list
