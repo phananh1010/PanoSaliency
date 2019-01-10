@@ -105,16 +105,31 @@ def adjust_pixel_dataset3(hi, wi, H, W):
         wi = wi + W
     return hi, wi
 
-def adjust_pixellist_dataset3(pixel_list, H, W):
+def adjust_pixel_dataset2(hi, wi, H, W):
+    wi = W - wi
+    if wi < 0: 
+        wi = wi + W
+    return hi, wi
+
+def adjust_pixel_dataset1(hi, wi, H, W):
+    hi = H - hi
+    if hi < 0: 
+        hi = hi + H
+    return hi, wi
+
+
+
+def adjust_pixellist_dataset(dataset, pixel_list, H, W):
     rhi_list = []
     rwi_list = []
     for hi, wi in pixel_list:
-        hi, wi = adjust_pixel_dataset3(hi, wi, H, W)
+        if dataset == 1:
+            hi, wi = adjust_pixel_dataset1(hi, wi, H, W)
+        elif dataset == 2:
+            hi, wi = adjust_pixel_dataset2(hi, wi, H, W)
+        elif dataset == 3:
+            hi, wi = adjust_pixel_dataset3(hi, wi, H, W)
         rhi_list.append(hi)
         rwi_list.append(wi)
     return zip(rhi_list, rwi_list)
 
-def adjust_pixellist_dataset(dataset, pixel_list, H, W):
-    if dataset == 3:
-        return adjust_pixellist_dataset3(pixel_list, H, W)
-       
