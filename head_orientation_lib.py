@@ -95,6 +95,26 @@ def ang_to_geoxy(_theta, _phi, _h, _w):
     if temp < 0: temp = 180 + temp + 180
     temp = 360 - temp
     y = (temp * 1.0/360 * _w)
-    return x, y
+    return x, y#wi, hi
 
 
+def adjust_pixel_dataset3(hi, wi, H, W):
+    wi = W - wi
+    wi = wi - W/4
+    if wi < 0: 
+        wi = wi + W
+    return hi, wi
+
+def adjust_pixellist_dataset3(pixel_list, H, W):
+    rhi_list = []
+    rwi_list = []
+    for hi, wi in pixel_list:
+        hi, wi = adjust_pixel_dataset3(hi, wi, H, W)
+        rhi_list.append(hi)
+        rwi_list.append(wi)
+    return zip(rhi_list, rwi_list)
+
+def adjust_pixellist_dataset(dataset, pixel_list, H, W):
+    if dataset == 3:
+        return adjust_pixellist_dataset3(pixel_list, H, W)
+       

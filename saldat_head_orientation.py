@@ -97,6 +97,12 @@ class HeadOrientation:
         series_ds = np.array(series_ds)
         return series_ds
     
+    def load_vector_ds(self, dataset, topic):
+        dirpath, filename_list, f_parse, f_extract_direction = self.load_filename_list(dataset, topic)
+        series_ds = self.load_series_ds(filename_list, f_parse)
+        vector_ds = self.headpos_to_headvec(series_ds, f_extract_direction)
+        return vector_ds
+    
     
     def headpos_to_headvec(self, series_ds, f_extract_direction):
         #from raw head quarternion, convert to head direction vector
@@ -242,10 +248,14 @@ class HeadOrientation:
         return result1
     
     @staticmethod
-    def pixellist_from_fixation_list(fixation_list):
+    def pixellist_from_v_list(v_list):
+        #note, pixellist need to compatible with dataset
+        #dataset 2: fliplr
+        #dataset 1: maybe flipud
+        
         pixel_list = []
-        for _, v, _ ,_ in fixation_list:
+        for v in v_list:
             theta, phi = head_orientation_lib.vector_to_ang(v)
-            wi, hi = head_orientation_lib.ang_to_geoxy(theta, phi, head_orientation_lib.H, head_orientation_lib.W)
+            hi, wi = head_orientation_lib.ang_to_geoxy(theta, phi, head_orientation_lib.H, head_orientation_lib.W)
             pixel_list.append([hi, wi])
         return pixel_list
