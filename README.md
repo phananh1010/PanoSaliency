@@ -1,22 +1,46 @@
-# PanoSaliency
-This repository contains source code to generate 360-degree saliency
+# Pano Saliency  
+This README file contains the instructions to use our 360-degree saliency dataset and how to reproduce the saliency maps which were discussed in the paper "A 360-Degree Saliency Dataset". The data and source code are distributed under the terms of the MIT license.
 
-## Content
+# Paper Abstract
+Despite the increasing popularity, realizing 360-degree videos in everyday applications is still challenging. Considering the unique viewing behavior in head-mounted display (HMD), understanding the saliency of 360-degree videos becomes the key to various 360-degree video research. Unfortunately, existing saliency datasets are either irrelevant to 360-degree videos or too small to support saliency modeling. In this paper, we introduce a large saliency dataset for 360-degree videos with 50,654 saliency maps from 24 diverse videos. The dataset is created by a new methodology supported by psychology studies in HMD viewing. Evaluation of the dataset shows that the generated saliency is highly correlated with the actual user fixation and that the saliency data can provide useful insight on user attention in 360-degree video viewing. The dataset and the program used to extract saliency are both made publicly available to facilitate future research. 
 
+# Program structure
+`/data` contains the [link](https://drive.google.com/open?id=1zNzxwMhSsvsGgMt5WWemPZopVjdRdm-5) to Google Drive where the saliency maps are stored.  
+`/data/head-orientation` is the folder where input head tracking logs are supposed to reside. However, the input logs can also be specified inside the `/header.py` script file.   
+`/get_fixation.py` is the main entry for the data collection program.  
+`/example.py`is the example Python code to retrieve the saliency maps from files in `data` folder.  
+
+# 360-Degree Saliency Dataset  
+The dataset includes 50,654 saliency maps from 24 videos. The saliency maps for each video are stored together in one file. The data in each file is organized into records. Each record has three fields: `timestamp`, `fixation`, and `saliency map`. The first field is the relative video time in seconds for the saliency maps. The second field is a list of fixation points. Each fixation point is a unit vector representing the head orientation in the three-dimensional space. The third field is the saliency map, where each pixel is a float number representing the saliency level in the original video frame.
+
+To access the dataset, please follow the link provided inside `./data` folder.
+
+# Program
 ## Requirement & Installation
-1. Download Python 2 
+1. Download Python 2  
 The program is developed Python 2.7. It is recommended that the [Anaconda2](https://www.anaconda.com/distribution/) packages is used
-2. Install [pyquarternion](http://kieranwynn.github.io/pyquaternion/)
-```console
+2. Install [pyquarternion](http://kieranwynn.github.io/pyquaternion/). 
+```sh
 pip install pyquaternion
 ```
+3. Collect Head Tracking Logs  
+The program can received head tracking logs either in quarternion or Euler angles, and output saliency maps. Currently, head tracking logs are received from [Wu](https://wuchlei-thu.github.io/), [Corbillon](http://dash.ipv6.enstb.fr/headMovements/), and [Lo](https://nmsl.cs.nthu.edu.tw/360video/)
 
 ## Dataset Collection Program
 
-## Dataset
+To access our generated saliency maps, refer to the example in the file `./example.py`. The saliency maps are stored in python pickle format, which need to be extracted by a python program.
 
-## License
+To generate saliency map from heade tracking logs, refer to the file `./get_fixation.py`. The program assumes input head tracking logs have been downloaded and the file paths have been provided in `header.py`. To run the program, execute this command from terminal: 
+`sh
+python get_fixation.py <ds> <video>
+`
+The `get_fixation.py` file receives two parameters `ds` and `video`, which specify which head tracking logs and which video to convert. Here are the possible values:
+if `ds=1`, `video` can be `paris`, `roller`, `venise`, `diving`, `timelapse` 
+if `ds=2`, `video` can be `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`
+if `ds=3`, `video` can be `coaster2_`, `coaster_`, `diving`, `drive`, `game`, `landscape`, `pacman`, `panel`, `ride`, `sport`
+
+# License
 This project is licensed under the terms of the MIT license.
 
-## Contact
+# Contact
 If you have any general doubt about our work, please use the [public issues section](https://github.com/phananh1010/PanoSalNet/issues) on this github. Alternatively, drop us an e-mail at <mailto:anguyen139@student.gsu.edu> or <mailto:zyan@gsu.edu>.
