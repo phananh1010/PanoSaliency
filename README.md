@@ -18,29 +18,29 @@ To access the dataset, please follow the link provided inside `./data` folder.
 # Program
 ## Requirement & Installation
 1. Download Python 2  
-The program is developed Python 2.7. It is recommended that the [Anaconda2](https://www.anaconda.com/distribution/) packages is used
-2. Install [pyquarternion](http://kieranwynn.github.io/pyquaternion/). 
+The program is developed Python 2.7. It is recommended that the [Anaconda2](https://www.anaconda.com/distribution/) packages is used  
+2. Install [pyquarternion](http://kieranwynn.github.io/pyquaternion/).  
 ```sh
 pip install pyquaternion
 ```
 3. Collect Head Tracking Logs  
-The program can received head tracking logs either in quarternion or Euler angles, and output saliency maps. Currently, head tracking logs are received from [Wu](https://wuchlei-thu.github.io/), [Corbillon](http://dash.ipv6.enstb.fr/headMovements/), and [Lo](https://nmsl.cs.nthu.edu.tw/360video/)
+The program can received head tracking logs either in quarternion or Euler angles, and output saliency maps. Currently, head tracking logs are received from [Wu](https://wuchlei-thu.github.io/), [Corbillon](http://dash.ipv6.enstb.fr/headMovements/), and [Lo](https://nmsl.cs.nthu.edu.tw/360video/) . 
 
 ## Dataset Collection Program
 
-To access our generated saliency maps, refer to the example in the file `./example.py`. The saliency maps are stored in python pickle format, which need to be extracted by a python program.
+To access our generated saliency maps, refer to the example in the file `./example.py`. The saliency maps are stored in python pickle format, which need to be extracted by a python program.  
 
-To generate saliency map from heade tracking logs, refer to the file `./get_fixation.py`. The program assumes input head tracking logs have been downloaded and the file paths have been provided in `header.py`. To run the program, execute this command from terminal: 
-`sh
+To generate saliency map from heade tracking logs, refer to the file `./get_fixation.py`. The program assumes input head tracking logs have been downloaded and the file paths have been provided in `header.py`. To run the program, execute this command from terminal:  
+```sh
 python get_fixation.py <ds> <video>
-`
-The `get_fixation.py` file receives two parameters `ds` and `video`, which specify which head tracking logs and which video to convert. Here are the possible values:
-if `ds=1`, `video` can be `paris`, `roller`, `venise`, `diving`, `timelapse` 
-if `ds=2`, `video` can be `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`
-if `ds=3`, `video` can be `coaster2_`, `coaster_`, `diving`, `drive`, `game`, `landscape`, `pacman`, `panel`, `ride`, `sport`
+```
+The `get_fixation.py` file receives two parameters `ds` and `video`, which specify which head tracking logs and which video to convert. Here are the possible values:  
+if `ds=1`, `video` can be `paris`, `roller`, `venise`, `diving`, `timelapse`  
+if `ds=2`, `video` can be `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`  
+if `ds=3`, `video` can be `coaster2_`, `coaster_`, `diving`, `drive`, `game`, `landscape`, `pacman`, `panel`, `ride`, `sport`  
 
 # License
-This project is licensed under the terms of the MIT license.
+This project is licensed under the terms of the MIT license.  
 
 # Contact
 If you have any general doubt about our work, please use the [public issues section](https://github.com/phananh1010/PanoSalNet/issues) on this github. Alternatively, drop us an e-mail at <mailto:anguyen139@student.gsu.edu> or <mailto:zyan@gsu.edu>.
