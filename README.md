@@ -10,7 +10,7 @@ The dataset includes 50,654 saliency maps from 24 videos. The saliency maps for 
 To access the dataset, please follow the link provided inside `./data` folder.
 
 # Program
-# Program structure
+## Program structure
 `/data` contains the [link](https://drive.google.com/open?id=1zNzxwMhSsvsGgMt5WWemPZopVjdRdm-5) to Google Drive where the saliency maps are stored.  
 `/data/head-orientation` is the folder where input head tracking logs are supposed to reside. However, the input logs can also be specified inside the `/header.py` script file.   
 `/get_fixation.py` is the main entry for the data collection program.  
