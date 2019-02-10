@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import pickle
+import header
 
 
 import head_orientation_lib
@@ -9,7 +10,7 @@ import saldat_saliency
 
 if __name__ == "__main__":
     #specify dataset & video name to extract
-    TOPIC = '8'#for 6, modify 2 places, for loop vlength, and output file with _part
+    TOPIC = '3'#for 6, modify 2 places, for loop vlength, and output file with _part
     DELTA = 0.06
     
     dataset = saldat_head_orientation.HeadOrientation._DATASET2
@@ -19,12 +20,12 @@ if __name__ == "__main__":
     #specify output address to store the saliency maps
     
     #initialize head_oren
-    dirpath1 = u'./data/head-orientation/dataset1'
-    dirpath2 = u'./data/head-orientation/dataset2/Experiment_1'
-    dirpath3 = u'./data/head-orientation/dataset3/sensory/orientation'
-    ext1 = '.txt'
-    ext2 = '.csv'
-    ext3 = '.csv'
+    dirpath1 = header.dirpath1#u'./data/head-orientation/dataset1'
+    dirpath2 = header.dirpath2#u'./data/head-orientation/dataset2/Experiment_1'
+    dirpath3 = header.dirpath3#u'./data/head-orientation/dataset3/sensory/orientation'
+    ext1 = header.ext1
+    ext2 = header.ext2
+    ext3 = header.ext3
     headoren = saldat_head_orientation.HeadOrientation(dirpath1, dirpath2, dirpath3, ext1, ext2, ext3)
     
 
@@ -45,7 +46,7 @@ if __name__ == "__main__":
     _, vlength, _, _ = head_orientation_lib.topic_info_dict[topic]
     saliency_ds = []
     for t in np.arange(1, vlength, DELTA):#0.06
-    #for t in np.arange(vlength/3*2, vlength, DELTA):
+    #for t in np.arange( vlength/2, vlength, DELTA):
         try:
             fixation_list = headoren.get_fixation(vector_ds, t)
             v_list = [item[1] for item in fixation_list]
