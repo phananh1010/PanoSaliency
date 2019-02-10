@@ -7,7 +7,7 @@ This repository contains source code to generate 360-degree saliency
 1. Download Python 2 
 The program is developed Python 2.7. It is recommended that the [Anaconda2](https://www.anaconda.com/distribution/) packages is used
 2. Install [pyquarternion](http://kieranwynn.github.io/pyquaternion/)
-```bash
+```console
 pip install pyquaternion
 ```
 
