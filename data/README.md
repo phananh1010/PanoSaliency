@@ -1,4 +1,5 @@
-Due to the large file size, the dataset files have been moved to Google Drive. It can be directly accessed from this [link](https://drive.google.com/open?id=1zNzxwMhSsvsGgMt5WWemPZopVjdRdm-5).  
+Saliency maps can be directly accessed from this [link](https://drive.google.com/open?id=1zNzxwMhSsvsGgMt5WWemPZopVjdRdm-5).  
+The 360-degree videos can be accessed from this [link](https://drive.google.com/open?id=1OWB7Ob1-F7lBsCOD0Da-ahz6bXZO91Hj)
 
 The following table are the description of the videos associated with each saliency map file. Note that each file are identified by the dataset index (ds) and the video name.  
 
