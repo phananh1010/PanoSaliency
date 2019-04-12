@@ -10,15 +10,15 @@ The following table are the description of the videos associated with each salie
 | 3  | Diving            | Diving     | 1             | 41             | 412          | 2OzlksZBTi                            |
 | 4  | Timelapse         | Timelapse  | 1             | 1              | 91           | CIw8R8thnm8                           |
 | 5  | Venise            | Venise     | 1             | 1              | 175          | s-AJRFQuAtE                           |
-| 6  | Conan 1           | 0          | 2             | 1              | 164          | https://nmsl.cs.nthu.edu.tw/360video/ |
-| 7  | Skiing            | 1          | 2             | 1              | 201          | https://nmsl.cs.nthu.edu.tw/360video/ |
-| 8  | Alien             | 2          | 2             | 1              | 293          | https://nmsl.cs.nthu.edu.tw/360video/ |
-| 9  | Conan 2           | 3          | 2             | 1              | 172          | https://nmsl.cs.nthu.edu.tw/360video/ |
-| 10 | Surfing           | 4          | 2             | 1              | 205          | https://nmsl.cs.nthu.edu.tw/360video/ |
-| 11 | War               | 5          | 2             | 1              | 655          | https://nmsl.cs.nthu.edu.tw/360video/ |
-| 12 | Cooking           | 6          | 2             | 1              | 451          | https://nmsl.cs.nthu.edu.tw/360video/ |
-| 13 | Football          | 7          | 2             | 1              | 164          | https://nmsl.cs.nthu.edu.tw/360video/ |
-| 14 | Rhinos            | 8          | 2             | 1              | 292          | https://nmsl.cs.nthu.edu.tw/360video/ |
+| 6  | Conan 1           | 0          | 2             | 1              | 164          | FiClYLgxJ5s |
+| 7  | Skiing            | 1          | 2             | 1              | 201          | 0wC3x_bnnps |
+| 8  | Alien             | 2          | 2             | 1              | 293          | G-XZhKqQAHU |
+| 9  | Conan 2           | 3          | 2             | 1              | 172          | 39MfLCMXGj0 |
+| 10 | Surfing           | 4          | 2             | 1              | 205          | MKWWhf8RAV8 |
+| 11 | War               | 5          | 2             | 1              | 655          | _Ar0UkmID6s |
+| 12 | Cooking           | 6          | 2             | 1              | 451          | JpAdLz3iDPE |
+| 13 | Football          | 7          | 2             | 1              | 164          | lvH89OkkKQ8 |
+| 14 | Rhinos            | 8          | 2             | 1              | 292          | AXG96ECE4hA |
 | 15 | Roller Coaster    | Coaster_   | 3             | 21             | 140          | 8lsB-P8nGSM                           |
 | 16 | Mega Coaster      | Coaster2_  | 3             | 91             | 150          | -xNN-bJQ4vI                           |
 | 17 | Shark Shipwreck   | Diving2    | 3             | 31             | 90           | aQd41nbQM-U                           |
