@@ -2,7 +2,7 @@ Saliency maps can be directly accessed from this [link](https://drive.google.com
 
 The following table are the description of the videos associated with each saliency map file. Note that each file are identified by the dataset index (ds) and the video name.  
 
-| No | Video description | Video name | Dataset Index | From (seconds) | To (seconds) | File location (Youtube Id/Url)        |
+| No | Video description | Video name | Dataset Index | From (seconds) | To (seconds) | Original file location (Youtube Id/Url)        |
 |----|-------------------|------------|---------------|----------------|--------------|---------------------------------------|
 | 1  | Paris             | Paris      | 1             | 1              | 244          | sJxiPiAaB4k                           |
 | 2  | Roller Coaster    | Roller     | 1             | 66             | 134          | 8lsB-P8nGSM                           |
