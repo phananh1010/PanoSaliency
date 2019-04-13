@@ -1,5 +1,8 @@
 # Pano Saliency  
 This README file contains the instructions to use our 360-degree saliency dataset and how to reproduce the saliency maps which were discussed in the paper "A 360-Degree Saliency Dataset". The data and source code are distributed under the terms of the MIT license.
+Our contribution in this project are:
+- A 360-degree saliency dataset with 50,654 saliency maps from 24 diverse videos. (The links to the source of these videos are also provided)
+- An open-source software to create 360-degree saliency maps from head tracking logs. 
 
 # Paper Abstract
 Despite the increasing popularity, realizing 360-degree videos in everyday applications is still challenging. Considering the unique viewing behavior in head-mounted display (HMD), understanding the saliency of 360-degree videos becomes the key to various 360-degree video research. Unfortunately, existing saliency datasets are either irrelevant to 360-degree videos or too small to support saliency modeling. In this paper, we introduce a large saliency dataset for 360-degree videos with 50,654 saliency maps from 24 diverse videos. The dataset is created by a new methodology supported by psychology studies in HMD viewing. Evaluation of the dataset shows that the generated saliency is highly correlated with the actual user fixation and that the saliency data can provide useful insight on user attention in 360-degree video viewing. The dataset and the program used to extract saliency are both made publicly available to facilitate future research. 
