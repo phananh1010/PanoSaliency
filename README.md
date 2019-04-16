@@ -14,7 +14,7 @@ To access the dataset, please follow the link provided inside `./data` folder.
 
 # Program
 ## Program structure
-`/data` contains the [link](https://drive.google.com/open?id=1zNzxwMhSsvsGgMt5WWemPZopVjdRdm-5) to Google Drive where the saliency maps are stored.  
+`/data` contains the [link](https://zenodo.org/record/2641282#.XLYYGkMpDAg) to Zendoro where the saliency maps are stored.  
 `/data/head-orientation` is the folder where input head tracking logs are supposed to reside. However, the input logs can also be specified inside the `/header.py` script file.   
 `/get_fixation.py` is the main entry to create 360-degree saliency maps from head tracking logs.  
 `/example.py`is the example Python code to retrieve the saliency maps from files in `data` folder.  
