@@ -1,4 +1,5 @@
-Saliency maps can be directly accessed from this [link](https://drive.google.com/open?id=1zNzxwMhSsvsGgMt5WWemPZopVjdRdm-5).  
+Saliency maps can be directly accessed from this [link](https://zenodo.org/record/2641282#.XLYYGkMpDAg)
+<!--(https://drive.google.com/open?id=1zNzxwMhSsvsGgMt5WWemPZopVjdRdm-5).-->
 
 The following table are the description of the videos associated with each saliency map file. Note that each file are identified by the dataset index (ds) and the video name.  
 
