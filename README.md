@@ -12,7 +12,7 @@ To cite our paper, use this Bibtex code:
 @inproceedings{anguyen139,
 AUTHOR = {Nguyen, Anh and Yan, Zhisheng},
  title = {A Saliency Dataset for 360-Degree Videos},
- booktitle = {Proceedings of the 10th ACM on Multimedia Systems Conference (MMSys'19)},
+ booktitle = {Proceedings of the 10th ACM Multimedia Systems Conference (MMSys'19)},
  year = {2019}
 }
 ```
