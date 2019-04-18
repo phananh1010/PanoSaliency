@@ -1,13 +1,13 @@
 # A Saliency Dataset for 360-Degree Videos 
 This README file contains the instructions to use our 360-degree saliency dataset and how to reproduce the saliency maps which were discussed in the paper:
 
-Anh Nguyen and Zhisheng Yan. A saliency dataset for 360-degree videos. In Proceedings of the 10th ACM on Multimedia Systems Conference (MMSys’19), 2019.
+Anh Nguyen and Zhisheng Yan. A saliency dataset for 360-degree videos. In Proceedings of the 10th ACM Multimedia Systems Conference (MMSys’19), 2019.
 
 The data and source code are distributed under the terms of the MIT license. Our contributions in this project are:
 - A 360-degree saliency dataset with 50,654 saliency maps from 24 diverse videos. (original YouTube links of these videos are also provided).
 - An open-source software to create 360-degree saliency maps from head tracking logs. 
 
-To cite our paper, use this Bitex code: 
+To cite our paper, use this Bibtex code: 
 ```
 @inproceedings{anguyen139,
 AUTHOR = {Nguyen, Anh and Yan, Zhisheng},
