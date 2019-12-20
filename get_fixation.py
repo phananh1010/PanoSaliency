@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pickle
 import header
+import sys
 
 
 import head_orientation_lib
@@ -10,10 +11,10 @@ import saldat_saliency
 
 if __name__ == "__main__":
     #specify dataset & video name to extract
-    TOPIC = '3'#for 6, modify 2 places, for loop vlength, and output file with _part
+    TOPIC = sys.argv[2]#for 6, modify 2 places, for loop vlength, and output file with _part
     DELTA = 0.06
     
-    dataset = saldat_head_orientation.HeadOrientation._DATASET2
+    dataset = int(sys.argv[1])#saldat_head_orientation.HeadOrientation._DATASET2
     topic = TOPIC#dataset 1: paris, roller, venise,diving,timelapse, 
                    #dataset 2: '0', '1', '2', '3', '4', '5', '6', '7', '8'
                    #dataset 3: ['coaster2_', 'coaster_', 'diving', 'drive', 'game', 'landscape', 'pacman', 'panel', 'ride', 'sport']

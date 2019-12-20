@@ -56,7 +56,7 @@ class Fixation:
         if dataset == self._DATASET2:
             heat_map1 = np.fliplr(heat_map)
             heat_map1 = np.flipud(heat_map1)
-            pos = head_orientation_lib.W/2
+            pos = int(head_orientation_lib.W/2)
             temp = np.copy(heat_map1[:, pos:])
             heat_map1[:, pos:] = heat_map1[:, :pos]
             heat_map1[:, :pos] = temp
@@ -64,7 +64,7 @@ class Fixation:
         elif dataset == self._DATASET1:
             ##heat_map1 = np.fliplr(heat_map1)
             heat_map1 = np.flipud(heat_map)
-            pos = head_orientation_lib.W/2
+            pos = int(head_orientation_lib.W/2)
             temp = np.copy(heat_map1[:, pos:])
             heat_map1[:, pos:] = heat_map1[:, :pos]
             heat_map1[:, :pos] = temp
@@ -72,12 +72,11 @@ class Fixation:
         elif dataset == self._DATASET3:
             heat_map1 = np.fliplr(heat_map)
             heat_map1 = np.flipud(heat_map1)
-            pos = head_orientation_lib.W/4
-            npos = head_orientation_lib.W/4*3
+            pos = int(head_orientation_lib.W/4)
+            npos = int(head_orientation_lib.W/4*3)
             temp = np.copy(heat_map1[:, :npos])
             heat_map1[:, :pos] = heat_map1[:, npos:]
             heat_map1[:, pos:] = temp
             
         
         return heat_map1
-

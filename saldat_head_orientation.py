@@ -10,9 +10,11 @@ from sklearn.datasets.samples_generator import make_blobs
 from sklearn.preprocessing import StandardScaler
 
 import head_orientation_lib
-reload(head_orientation_lib)
+#reload(head_orientation_lib)
 
 class HeadOrientation:
+    #NOTE: original DBSCAN param is: _bp=3, _ap=1, eps=0.3, worked best for ds=2 and ds=3
+    #      for ds=1 use 
     _DATASET1 = 1
     _DATASET2 = 2
     _DATASET3 = 3
@@ -27,7 +29,7 @@ class HeadOrientation:
     
     _topic_dict = {_DATASET1:['venise', 'diving', 'roller', 'paris', 'timelapse'], \
               _DATASET2:['1', '0', '3', '2', '5', '4', '7', '6', '8'],\
-              _DATASET3:['coaster_', 'coaster2_', 'diving', 'drive', 'game', 'landscape', 'pacman', 'panel', 'ride', 'sport']}
+              _DATASET3:['coaster', 'coaster2', 'diving', 'drive', 'game', 'landscape', 'pacman', 'panel', 'ride', 'sport']}
     
     def __init__(self, dir_path1, dir_path2, dir_path3, file_ext1, file_ext2, file_ext3):
         self._dirpath_dat1 = dir_path1
@@ -42,7 +44,7 @@ class HeadOrientation:
         
     def parse_dat1(self, _file_name):#for X.Corbillon dataset
         temp = open(_file_name).read().split('\n')[:-1]
-        temp2 = [map(float, item.split(' ')) for item in temp]
+        temp2 = [list(map(float, item.split(' '))) for item in temp]
         for i, _ in enumerate(temp2):
             item = temp2[i]
             temp2[i] = [item[0], item[1], item[3], item[5], item[4], item[2]]
@@ -50,7 +52,7 @@ class HeadOrientation:
 
     def parse_dat2(self, _file_name):#for Wu dataset
         temp = open(_file_name).read().split('\n')[1:-1]#remove header and useless last line
-        temp2 = [map(float, item.split(',')[1:]) for item in temp]
+        temp2 = [list(map(float, item.split(',')[1:])) for item in temp]
         #timestamp_list = [datetime.datetime.strptime(item.split(',')[0], "%Y-%m-%d %H:%M:%S.%f") for item in temp]
         for i, _ in enumerate(temp2):
             item = temp2[i]#timestamp, z, y, x, w, ....
@@ -59,7 +61,7 @@ class HeadOrientation:
     
     def parse_dat3(self, _file_name):#for Wen Lo dataset
         temp = open(_file_name).read().split('\n')[1:-1]#remove header and useless last line
-        temp2 = [map(float, item.split(',')) for item in temp]
+        temp2 = [list(map(float, item.split(','))) for item in temp]
 
         for i, _ in enumerate(temp2):
             fid, _, _, _, _, _, _, theta, phi, psi = temp2[i]
@@ -76,7 +78,7 @@ class HeadOrientation:
         #load all headpos log of all users for a given dataset & video_topic
         filename_list = []
         if dataset != self._DATASET1 and dataset != self._DATASET2 and dataset != self._DATASET3:
-            print 'ERROR, dataset number must be either 1 or 2 or 3'
+            print ('ERROR, dataset number must be either 1 or 2 or 3')
             raise Exception
         
         dirpath, file_ext, f_parse, f_extract_orientation = self._dataset_info_dict[dataset]
@@ -120,7 +122,10 @@ class HeadOrientation:
 
 
 
-    def cutoff_vel_acc(self, vector_ds):
+    def cutoff_vel_acc(self, vector_ds, dataset=2):
+        thres_dict = {1:(10, 20), 2:(20, 50), 3:(10, 20)}
+        vthres, athres = thres_dict[dataset]
+        
         dd = 7
         stats_ds = []
         for vec in vector_ds:
@@ -148,18 +153,18 @@ class HeadOrientation:
             collect_mode = 0 #0 is normal, 1 is begin fast, 2 is begin slow
             #print stats_ds[0]
             for idx, (timestamp, vec, v, a) in enumerate(vector):
-                if v > 20 and a > 50:
+                if v > vthres and a > athres:
                     collect_mode = 1;
-                if a < -40 and collect_mode == 1:#slowing down
+                if a < (-athres) and collect_mode == 1:#slowing down#previously, -athres + 10
                     collect_mode = 2
-                if collect_mode == 2 and a > -50  and v < 20:#slowing down finish
+                if collect_mode == 2 and a > -athres  and v < vthres:#slowing down finish
                     collect_mode = 0
                 if collect_mode == 1 or collect_mode == 2:
                     remove_idx.add(idx)
             result.append([vector[idx] for idx,_ in enumerate(vector) if idx not in remove_idx])
         return result
     
-    def get_fixation(self, vector_ds, time, _bp=3, _ap=1, filter_fix=True):
+    def get_fixation(self, vector_ds, time, _bp=1, _ap=1, filter_fix=True):
         dt = 1.0/30
         series_dt = []
         for vector in vector_ds:
@@ -203,7 +208,7 @@ class HeadOrientation:
                 orifix_list.append([time, v, 0, 0])
         return pixel_set, orifix_list    
     
-    def filter_fixation(self, _fix_list, eps=0.3, min_samples=3):
+    def filter_fixation(self, _fix_list, eps=.35, min_samples=3):
         result = set()
         _geoxy_set = self.create_fixation_pixellist(_fix_list)
 
@@ -232,8 +237,8 @@ class HeadOrientation:
             result1 = np.flipud(result1)
             result1 = np.fliplr(result1)
         elif dataset == self._DATASET3:
-            pos = head_orientation_lib.W/4
-            npos = head_orientation_lib.W/4*3
+            pos = int(head_orientation_lib.W/4)
+            npos = int(head_orientation_lib.W/4*3)
             
             result1 = np.fliplr(result)
             temp = np.copy(result1[:, pos:])
@@ -242,7 +247,7 @@ class HeadOrientation:
             result1 = np.flipud(result1)
 
         else:
-            print 'INVALID dataset'
+            print ('INVALID dataset')
             raise
             
         return result1
