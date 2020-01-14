@@ -21,6 +21,7 @@ if __name__ == "__main__":
     #specify output address to store the saliency maps
     
     #initialize head_oren
+    print ("generating saliency maps for ds={}, topic={}".format(dataset, TOPIC))
     dirpath1 = header.dirpath1#u'./data/head-orientation/dataset1'
     dirpath2 = header.dirpath2#u'./data/head-orientation/dataset2/Experiment_1'
     dirpath3 = header.dirpath3#u'./data/head-orientation/dataset3/sensory/orientation'
@@ -38,11 +39,6 @@ if __name__ == "__main__":
     #initialize 
     var = 20
     salsal = saldat_saliency.Fixation(var)
-    
-    dirpath, filename_list, f_parse, f_extract_direction = headoren.load_filename_list(dataset, topic)
-    series_ds = headoren.load_series_ds(filename_list, f_parse)
-    vector_ds = headoren.headpos_to_headvec(series_ds, f_extract_direction)
-    vector_ds = headoren.cutoff_vel_acc(vector_ds)
 
     _, vlength, _, _ = head_orientation_lib.topic_info_dict[topic]
     saliency_ds = []
@@ -52,7 +48,7 @@ if __name__ == "__main__":
             fixation_list = headoren.get_fixation(vector_ds, t)
             v_list = [item[1] for item in fixation_list]
 
-            print t, len(fixation_list)
+            print (t, len(fixation_list))
             fmap0 = headoren.create_fixation_map(fixation_list, dataset)
             heat_map0 = salsal.create_saliency(fixation_list, dataset)
             saliency_ds.append([t, v_list, heat_map0])
