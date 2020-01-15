@@ -34,7 +34,7 @@ if __name__ == "__main__":
     dirpath, filename_list, f_parse, f_extract_direction = headoren.load_filename_list(dataset, topic)
     series_ds = headoren.load_series_ds(filename_list, f_parse)
     vector_ds = headoren.headpos_to_headvec(series_ds, f_extract_direction)
-    vector_ds = headoren.cutoff_vel_acc(vector_ds)
+    vector_ds = headoren.cutoff_vel_acc(vector_ds, dataset=dataset)
     
     #initialize 
     var = 20

@@ -14,7 +14,7 @@ import head_orientation_lib
 
 class HeadOrientation:
     #NOTE: original DBSCAN param is: _bp=3, _ap=1, eps=0.3, worked best for ds=2 and ds=3
-    #      for ds=1 use 
+    #      for ds=1 use _bp=1, _ap=1, eps=.35
     _DATASET1 = 1
     _DATASET2 = 2
     _DATASET3 = 3
@@ -123,7 +123,7 @@ class HeadOrientation:
 
 
     def cutoff_vel_acc(self, vector_ds, dataset=2):
-        thres_dict = {1:(10, 20), 2:(20, 50), 3:(10, 20)}
+        thres_dict = {1:(20, 50), 2:(20, 50), 3:(15, 35 )}
         vthres, athres = thres_dict[dataset]
         
         dd = 7
