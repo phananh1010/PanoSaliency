@@ -13,8 +13,9 @@ import head_orientation_lib
 #reload(head_orientation_lib)
 
 class HeadOrientation:
-    #NOTE: original DBSCAN param is: _bp=3, _ap=1, eps=0.3, worked best for ds=2 and ds=3
+    #NOTE: original DBSCAN param is: _bp=3, _ap=1, eps=0.3, worked best for ds=2
     #      for ds=1 use _bp=1, _ap=1, eps=.35
+    #       for ds=3 use 
     _DATASET1 = 1
     _DATASET2 = 2
     _DATASET3 = 3
@@ -88,7 +89,7 @@ class HeadOrientation:
                 if file.endswith(file_ext) and file.lower().find(topic) >= 0:
                      filename_list.append((os.path.join(root, file)))          
         return dirpath, filename_list, f_parse, f_extract_orientation
-        
+
     
     def load_series_ds(self, filename_list, f_parse):
         series_ds = []
@@ -96,7 +97,17 @@ class HeadOrientation:
         for idx, file_name in enumerate(filename_list):
             series = f_parse(file_name);
             series_ds.append(series.tolist())
-        series_ds = np.array(series_ds)
+        
+        for uid in range(len(series_ds)):
+            t_list = set()
+            tmp = []
+            for item in series_ds[uid]:
+                #print (item)
+                t = item[0]
+                if t not in t_list:
+                    t_list.add(t)
+                    tmp.append(item)
+            series_ds[uid] = np.array(tmp)
         return series_ds
     
     def load_vector_ds(self, dataset, topic):
@@ -120,51 +131,105 @@ class HeadOrientation:
             vector_ds.append(vec)
         return vector_ds
 
-
-
-    def cutoff_vel_acc(self, vector_ds, dataset=2):
-        thres_dict = {1:(20, 50), 2:(20, 50), 3:(15, 35 )}
-        vthres, athres = thres_dict[dataset]
-        
-        dd = 7
+    def get_stats_ds0(self, vector_ds, sample_distance):
+        #TODO: get angular movement for ALL user, store in list structure
+        dd = sample_distance
         stats_ds = []
         for vec in vector_ds:
             stats = []
             for idx in range(len(vec)):
-                if idx < 5:
+                if idx < dd+2:
+                    #stats.append([vec[idx][0], 0, 0, 0])
                     continue
                 dt = vec[idx][0] - vec[idx-dd][0]
                 theta = head_orientation_lib.angle_between(vec[idx][1], vec[idx-dd][1])
                 v = theta * 1.0 / dt   
                 vec[idx][2] = v
 
-                #if idx == 1:
-                #   continue
                 dv = vec[idx][2] - vec[idx-dd][2]
                 a = dv * 1.0 / dt
                 vec[idx][3] = a
-                item = [vec[idx][0], vec[idx][1], v, a]
+                item = [vec[idx][0], theta, v, a]
                 stats.append(item)
+            stats = np.array(stats)
             stats_ds.append(stats)
+        return stats_ds
+    
+    def get_stats_ds(self, vector_ds, sample_distance):
+        #TODO: get angular movement for ALL user, store in list structure
+        dd = sample_distance
+        stats_ds = []
+        for vec in vector_ds:
+            stats = []
+            for idx in range(len(vec)):
+                if idx < dd+2:
+                    stats.append([vec[idx][0], 0, 0, 0])
+                    continue
+                dt = vec[idx][0] - vec[idx-dd][0]
+                theta = head_orientation_lib.angle_between(vec[idx][1], vec[idx-dd][1])
+                v = theta * 1.0 / dt   
+#                 vec[idx][2] = v
+
+#                 dv = vec[idx][2] - vec[idx-dd][2]
+#                 a = dv * 1.0 / dt
+#                 vec[idx][3] = a
+                item = [vec[idx][0], theta, v, 0]
+                stats.append(item)
+            stats = np.array(stats)
+            t_list, dtheta_list, _, _ = (stats[:, i] for i in range(4) )
+            #stats[:, 2] = np.gradient(dtheta_list, t_list) #calculate velocity incorrectly
+            stats[:, 3] = np.gradient(stats[:, 2], t_list)
+            stats_ds.append(stats)
+        return stats_ds
+    
+    def cutoff_vel_acc_compliment(self, vector_ds, dataset=2, thres_list=(), sample_distance=7):
+        if len(thres_list) < 2:
+            thres_dict = {1:(20, 50), 2:(20, 50), 3:(27, 60)}
+            vthres, athres = thres_dict[dataset]
+        else:
+            vthres, athres = thres_list      
+        stats_ds = self.get_stats_ds(vector_ds, sample_distance=sample_distance)
         result = []
-        for vector in stats_ds:
-            #removing too fast movement
-            remove_idx = set()
-            collect_mode = 0 #0 is normal, 1 is begin fast, 2 is begin slow
-            #print stats_ds[0]
-            for idx, (timestamp, vec, v, a) in enumerate(vector):
-                if v > vthres and a > athres:
-                    collect_mode = 1;
-                if a < (-athres) and collect_mode == 1:#slowing down#previously, -athres + 10
-                    collect_mode = 2
-                if collect_mode == 2 and a > -athres  and v < vthres:#slowing down finish
-                    collect_mode = 0
-                if collect_mode == 1 or collect_mode == 2:
-                    remove_idx.add(idx)
-            result.append([vector[idx] for idx,_ in enumerate(vector) if idx not in remove_idx])
+        for uid in range(len(stats_ds)):
+            t_list, dtheta_list, v_list, a_list = stats_ds[uid].T
+            idx_list = np.argwhere(v_list>vthres).ravel()
+            result.append([vector_ds[uid][idx] for idx in idx_list])
+        return result
+
+    def cutoff_vel_acc(self, vector_ds, dataset=2, thres_list=(), sample_distance=7):
+        if len(thres_list) < 2:
+            thres_dict = {1:(20, 50), 2:(20, 50), 3:(27, 60)}
+            vthres, athres = thres_dict[dataset]
+        else:
+            vthres, athres = thres_list
+        #print (f'DEBUG: threslist: {thres_list}')
+        #return stats_ds having same shape as vector ds, which 
+        stats_ds = self.get_stats_ds(vector_ds, sample_distance=sample_distance)
+        result = []
+        for uid in range(len(stats_ds)):
+            t_list, dtheta_list, v_list, a_list = stats_ds[uid].T
+            idx_list = np.argwhere(v_list<=vthres).ravel()
+            result.append([vector_ds[uid][idx] for idx in idx_list])
+        
+#         result = []
+#         for vector in stats_ds:
+#             #removing too fast movement
+#             remove_idx = set()
+#             collect_mode = 0 #0 is normal, 1 is begin fast, 2 is begin slow
+#             #print stats_ds[0]
+#             for idx, (timestamp, theta, v, a) in enumerate(vector):
+#                 if v > vthres and a > athres:
+#                     collect_mode = 1;
+#                 if a < (-athres) and collect_mode == 1:#slowing down#previously, -athres + 10
+#                     collect_mode = 2
+#                 if collect_mode == 2 and a > -athres  and v < vthres:#slowing down finish
+#                     collect_mode = 0
+#                 if collect_mode == 1 or collect_mode == 2:
+#                     remove_idx.add(idx)
+#             result.append([vector[idx] for idx,_ in enumerate(vector) if idx not in remove_idx])
         return result
     
-    def get_fixation(self, vector_ds, time, _bp=1, _ap=1, filter_fix=True):
+    def get_fixation(self, vector_ds, time, _bp=2, _ap=1, filter_fix=True):
         dt = 1.0/30
         series_dt = []
         for vector in vector_ds:
@@ -208,7 +273,7 @@ class HeadOrientation:
                 orifix_list.append([time, v, 0, 0])
         return pixel_set, orifix_list    
     
-    def filter_fixation(self, _fix_list, eps=.35, min_samples=3):
+    def filter_fixation(self, _fix_list, eps=.4, min_samples=3):
         result = set()
         _geoxy_set = self.create_fixation_pixellist(_fix_list)
 

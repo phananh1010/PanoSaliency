@@ -29,16 +29,14 @@ if __name__ == "__main__":
     ext2 = header.ext2
     ext3 = header.ext3
     headoren = saldat_head_orientation.HeadOrientation(dirpath1, dirpath2, dirpath3, ext1, ext2, ext3)
+    #initialize 
+    var = 20
+    salsal = saldat_saliency.Fixation(var)
     
-
     dirpath, filename_list, f_parse, f_extract_direction = headoren.load_filename_list(dataset, topic)
     series_ds = headoren.load_series_ds(filename_list, f_parse)
     vector_ds = headoren.headpos_to_headvec(series_ds, f_extract_direction)
     vector_ds = headoren.cutoff_vel_acc(vector_ds, dataset=dataset)
-    
-    #initialize 
-    var = 20
-    salsal = saldat_saliency.Fixation(var)
 
     _, vlength, _, _ = head_orientation_lib.topic_info_dict[topic]
     saliency_ds = []
