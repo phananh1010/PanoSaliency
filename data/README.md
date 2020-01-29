@@ -7,7 +7,7 @@ The following table are the description of the videos associated with each salie
 |----|-------------------|------------|---------------|----------------|--------------|---------------------------------------|
 | 1  | Paris             | Paris      | 1             | 1              | 244          | sJxiPiAaB4k                           |
 | 2  | Roller Coaster    | Roller     | 1             | 66             | 134          | 8lsB-P8nGSM                           |
-| 3  | Diving            | Diving     | 1             | 41             | 412          | 2OzlksZBTi                            |
+| 3  | Diving            | Diving     | 1             | 41             | 412          | 2OzlksZBTiA                           |
 | 4  | Newyork           | Timelapse  | 1             | 1              | 91           | CIw8R8thnm8                           |
 | 5  | Venise            | Venise     | 1             | 1              | 175          | s-AJRFQuAtE                           |
 | 6  | Conan 1           | Conan 1    | 2             | 1              | 164          | FiClYLgxJ5s |
